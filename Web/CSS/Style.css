@@ -1,0 +1,66 @@
+*
+{
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+}
+
+:root
+{
+	--main-bg-color: #360408;
+	--text-color: #dab897;
+	--h1-color: #efe7dd;
+}
+
+body
+{
+	background-color: var(--main-bg-color);
+}
+
+h1
+{
+	color: var(--h1-color);
+	padding: 3%;
+	margin-bottom: 3%;
+}
+
+p, a
+{
+	color: var(--text-color);
+	font-size: 5vh;
+	padding: 2vh 6vh;
+	margin: 4vh 0;
+}
+
+a
+{
+	border: var(--h1-color) 0.5vh solid;
+	background-color: #efe7dd;
+	border-radius: 3vh;
+	color: #360408;
+	display: inline-block;
+}
+
+input
+{
+	width: 80%;
+    text-align: center;
+    padding: 1vh;
+    border: none;
+    border-radius: 1vh;
+}
+
+.block
+{
+	position: absolute;
+	text-align: center;
+	width: 84%;
+	margin: 8% 8%;
+}
+
+#download
+{
+	width: 70%;
+    background: #c17a48;
+    border-color: #360408;
+}

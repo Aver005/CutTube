@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CutTube: Выберите отрывок</title>
+	<script type="text/javascript" src="eel.js"></script>
+	<link rel="stylesheet" type="text/css" href="CSS/Style.css">
+</head>
+<body>
+    <div class="block">
+        <h1>Выберите отрывок видео</h1>
+        <p id="first_info">Поставьте видео на нужную позицию и нажмите на кнопку "Первый отрывок"</p>
+        <p id="second_info">Потом повторите действие и нажмите на "Второй отрывок"</p>
+        <div id="player"></div>
+        <a href="javascript:nothing();" id="first_part" style="display: none;">Первый отрывок</a>
+        <a href="javascript:nothing();" id="second_part" style="display: none;">Второй отрывок</a>
+        <a href="javascript:nothing();" id="download" style="display: none;">Скачать отрывок!</a>
+    </div>
+
+    <script>
+        window.resizeTo(600, 400);
+        window.onresize = function () {window.resizeTo(600, 400);}
+
+        var first_part_time = 0;
+        var second_part_time = 0;
+        var first_part_btn = document.getElementById("first_part");
+        var second_part_btn = document.getElementById("second_part");
+        var first_info = document.getElementById("first_info");
+        var second_info = document.getElementById("second_info");
+        var download_btn = document.getElementById("download");
+
+        var videoID; var player;
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        async function onYouTubeIframeAPIReady() 
+        {
+            videoID = await eel.get_video_id()();
+            player = new YT.Player('player', 
+            {
+                width: '400',
+                height: '240',
+                videoId: videoID,
+                events: {'onReady': onPlayerReady}
+            });
+        }
+
+        function onPlayerReady(event) 
+        {
+            first_part_btn.style.display = "inline-block";
+            second_part_btn.style.display = "inline-block";
+        }
+
+        async function CheckTimings()
+        {
+            var result = await eel.check_timings_correct()();
+
+            if (!result) 
+            {
+                download_btn.style.display = "none";
+                return;
+            }
+
+            download_btn.style.display = "inline-block";
+        }
+
+        first_part_btn.onclick = async function() 
+        {
+            first_part_time = player.getCurrentTime();
+            await eel.set_first_timing(first_part_time)();
+            await CheckTimings();
+        };
+
+        second_part_btn.onclick = async function() 
+        {
+            second_part_time = player.getCurrentTime();
+            await eel.set_second_timing(second_part_time)();
+            await CheckTimings();
+        };
+
+        download_btn.onclick = function()
+        {
+            eel.download_video();
+            window.location = "Final.html";
+        };
+        
+        function nothing() {console.log("А зачем вы сюда зашли? :)");}
+        function stopVideo() {player.stopVideo();}
+    </script>
+</body>
+</html>

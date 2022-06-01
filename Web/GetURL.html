@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CutTube: Вставьте ссылку на видео</title>
+	<script type="text/javascript" src="eel.js"></script>
+	<link rel="stylesheet" type="text/css" href="CSS/Style.css">
+</head>
+<body>
+    <div class="block">
+		<h1>Вставьте ссылку</h1>
+		<input type="text" name="url">
+		<p id="info"></p>
+		<a href="#" id="work" style="display: none;">Выбрать отрывок</a>
+	</div>
+
+    <script>
+		window.resizeTo(600, 400);
+		window.onresize = function () {window.resizeTo(600, 400);}
+
+		var input = document.getElementsByName("url")[0];
+		var info = document.getElementById("info");
+		var work = document.getElementById("work");
+
+        input.oninput = async function()
+        {
+        	var text = "";
+        	var value = input.value;
+			work.style.display = "none";
+
+        	if (value != "")
+        	{
+				var result = await eel.check_for_youtube_url(value)();
+				text = result ? "Супер" : "Неправильная ссылка";
+			}
+
+			if (text == "Супер")
+			{
+				text = "";
+				work.style.display = "";
+			}
+
+            info.innerHTML = text;
+        };
+
+        work.onclick = async function()
+        {
+        	if (work.style.display != "") {return;}
+
+        	var url = input.value;
+        	var result = await eel.check_for_youtube_url(url)();
+
+        	if (!result) {return;}
+
+			var result = await eel.set_url(url)();
+			if (result) {window.location = "GetVideoPart.html";}
+        };
+	</script>
+</body>
+</html>
